@@ -2,6 +2,7 @@ package fapi_client
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -12,6 +13,37 @@ type FinanceApiClient struct {
 	Baseurl string
 	ApiKey  string
 	client  http.Client
+}
+
+func (f *FinanceApiClient) GetTicker(symbol, interval, length string) (*TickerResponse, error) {
+	path := fmt.Sprintf(`/v8/finance/chart/%s`, symbol)
+	query := make(map[string]string)
+	query["interval"] = interval
+	query["range"] = length
+
+	request, err := f.buildRequest(http.MethodGet, path, query)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := f.client.Do(request)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result := TickerResponse{}
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }
 
 func (f *FinanceApiClient) GetQuote(symbol ...string) (*QuoteResponse, error) {

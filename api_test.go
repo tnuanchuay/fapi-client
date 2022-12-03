@@ -17,3 +17,15 @@ func TestClientShouldGetResponseFromGetQuoteApi(t *testing.T) {
 		t.Error(fmt.Sprintf("expect %s, actual %s", expect, actual))
 	}
 }
+
+func TestGetTickerShouldReturnCorrectValue(t *testing.T) {
+	client := New("yfapi.net", "")
+	resp, err := client.GetTicker("KBANK.BK", "1d", "1y")
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !(len(resp.Chart.Result) > 0) {
+		t.Errorf("expect %s, actual %d", "more than 0", len(resp.Chart.Result))
+	}
+}
