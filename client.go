@@ -12,8 +12,8 @@ const (
 
 func New(baseUrl, apiKey string) *FinanceApiClient {
 	return &FinanceApiClient{
-		Baseurl: baseUrl,
-		ApiKey:  apiKey,
+		baseUrl: baseUrl,
+		apiKey:  apiKey,
 		client:  http.Client{},
 	}
 }

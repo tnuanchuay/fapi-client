@@ -10,8 +10,8 @@ import (
 )
 
 type FinanceApiClient struct {
-	Baseurl string
-	ApiKey  string
+	baseUrl string
+	apiKey  string
 	client  http.Client
 }
 
@@ -85,7 +85,7 @@ func (f *FinanceApiClient) GetQuote(symbol ...string) (*QuoteResponse, error) {
 func (f *FinanceApiClient) buildRequest(method, path string, query map[string]string) (*http.Request, error) {
 	u := url.URL{
 		Scheme:   "https",
-		Host:     f.Baseurl,
+		Host:     f.baseUrl,
 		Path:     path,
 		RawQuery: mapToQuery(query),
 	}
@@ -95,7 +95,7 @@ func (f *FinanceApiClient) buildRequest(method, path string, query map[string]st
 		return nil, err
 	}
 
-	request.Header.Add(X_API_KEY, f.ApiKey)
+	request.Header.Add(X_API_KEY, f.apiKey)
 
 	return request, err
 }
